@@ -25,7 +25,7 @@ int main()
     sort(_heavy_pos.begin(), _heavy_pos.end());
     sort(_metal_pos.begin(), _metal_pos.end());
 
-    long long count = 0;
+    int64_t count = 0;
     for (iter i = _heavy_pos.begin(); i != _heavy_pos.end(); ++i) {
         iter lower = lower_bound(_metal_pos.begin(), _metal_pos.end(), *i);
         if (lower != _metal_pos.end())
