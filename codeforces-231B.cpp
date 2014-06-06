@@ -18,7 +18,6 @@ int main() {
   for (int i = 1; i <= 10e6; ++i) {
     int left = i * x;
     int right = i / 10 + (i % 10) * pow(p - 1);
-    if (i == 25641) cout << left << " " << right << endl;
     if (left == right) {
       res = i;
       break;

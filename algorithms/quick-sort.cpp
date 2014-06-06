@@ -38,7 +38,7 @@ int main() {
   const int length = 20;
   int num[length];
 
-  for (int i = 0; i < length; i++)
+  for (int i = 0; i < length; ++i)
     num[i] = rand() % 100;
 
   quick_sort(num, 0, length - 1);
