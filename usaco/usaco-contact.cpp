@@ -8,17 +8,14 @@ LANG: C++
 #include <iostream>
 #include <string>
 #include <algorithm>
-#include <map>
-#include <vector>
+#include <bitset>
 using namespace std;
 
 struct Pattern {
   int count;
   string bit_seq;
 
-  Pattern(int count_, string bit_seq_) :
-    count(count_),
-    bit_seq(bit_seq_) {}
+  Pattern() : count(0) {}
 };
 
 bool sorter(const Pattern& lhs, const Pattern& rhs) {
@@ -29,10 +26,8 @@ bool sorter(const Pattern& lhs, const Pattern& rhs) {
   return lhs.bit_seq < rhs.bit_seq;
 }
 
-vector<Pattern> _patterns;
-
-map<string, int> _pattern_map;
-map<string, int>::iterator it;
+const int SIZE = (1 << 13) + 5;
+Pattern _patterns[SIZE];
 
 int main() {
   ofstream fout("contact.out");
@@ -52,20 +47,16 @@ int main() {
 
   for (int len = a; len <= b; ++len) {
     for (int i = 0; i <= size - len; ++i) {
-      string sub_seq = seq.substr(i, len);
-      it = _pattern_map.find(sub_seq);
+      // add 1 as prefix to differentiate patterns like 0 and 00
+      bitset<13> sub_bit("1" + seq.substr(i, len));
+      Pattern& pattern = _patterns[sub_bit.to_ulong()];
 
-      if (it == _pattern_map.end())
-        _pattern_map.insert(pair<string, int>(sub_seq, 1));
-      else
-        _pattern_map[sub_seq]++;
+      if (!pattern.count) pattern.bit_seq = seq.substr(i, len);
+      pattern.count++;
     }
   }
 
-  for (it = _pattern_map.begin(); it != _pattern_map.end(); ++it)
-    _patterns.push_back(Pattern(it->second, it->first));
-
-  sort(_patterns.begin(), _patterns.end(), sorter);
+  sort(_patterns, _patterns + SIZE, sorter);
 
   int index = 0;
   int prev_count = -1;
@@ -86,7 +77,7 @@ int main() {
     }
     else {
       if (++count < 6) fout << " " << pattern.bit_seq;
-      else { fout << endl << pattern.bit_seq; count = -1; }
+      else { fout << endl << pattern.bit_seq; count = 0; }
     }
 
     index++;
