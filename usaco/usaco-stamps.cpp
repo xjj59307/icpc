@@ -24,10 +24,9 @@ int main() {
   for (int i = 0; i < n; ++i)
     fin >> stamps[i];
 
-  int result = 0;
-  _dp[0] = 0;
+  int result = 1;
 
-  while (++result) {
+  while (true) {
     int min_val = k + 1;
     for (int i = 0; i < n; ++i) {
       if (result < stamps[i]) continue;
@@ -39,9 +38,12 @@ int main() {
     min_val++;
     if (min_val > k) break;
     else _dp[result] = min_val;
+
+    result++;
   }
 
-  fout << (result - 1)<< endl;
+  result--;
+  fout << result << endl;
 
   return 0;
 }
