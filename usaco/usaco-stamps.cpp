@@ -9,8 +9,8 @@ LANG: C++
 #include <algorithm>
 using namespace std;
 
-const int SIZE = 201 * 10000 + 5;
-bool _dp[SIZE];
+const int SIZE = 200 * 10000 + 5;
+int _dp[SIZE];
 
 int main() {
   ofstream fout("stamps.out");
@@ -19,32 +19,29 @@ int main() {
   int k;
   int n;
   int stamps[55];
-  int max_value = -1;
   
   fin >> k >> n;
-
-  for (int i = 0; i < n; ++i) {
+  for (int i = 0; i < n; ++i)
     fin >> stamps[i];
-    max_value = max(max_value, stamps[i]);
-  }
-
-  int max_range = max_value * k;
-  fill_n(_dp + 1, max_range, false);
-  _dp[0] = true;
-
-  for (int i = 0; i < k; ++i) {
-    for (int j = max_range; j >= 0; --j) {
-      for (int k = 0; k < n; ++k) {
-        int value = stamps[k];
-        if (_dp[j]) _dp[j + value] = true;
-      }
-    }
-  }
 
   int result = 0;
-  while(_dp[++result]) {}
+  _dp[0] = 0;
 
-  fout << (result - 1) << endl;
+  while (++result) {
+    int min_val = k + 1;
+    for (int i = 0; i < n; ++i) {
+      if (result < stamps[i]) continue;
+
+      if (_dp[result - stamps[i]] < min_val)
+        min_val = _dp[result - stamps[i]];
+    }
+
+    min_val++;
+    if (min_val > k) break;
+    else _dp[result] = min_val;
+  }
+
+  fout << (result - 1)<< endl;
 
   return 0;
 }
